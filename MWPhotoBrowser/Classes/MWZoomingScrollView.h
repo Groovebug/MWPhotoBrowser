@@ -8,12 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "MWPhotoProtocol.h"
-#import "MWTapDetectingImageView.h"
-#import "MWTapDetectingView.h"
 
-@class MWPhotoBrowser, MWPhoto, MWCaptionView;
+@class MWPhotoBrowser, MWCaptionView;
 
-@interface MWZoomingScrollView : UIScrollView <UIScrollViewDelegate, MWTapDetectingImageViewDelegate, MWTapDetectingViewDelegate> {
+@interface MWZoomingScrollView : UIScrollView <UIScrollViewDelegate> {
 	
 	MWPhotoBrowser *_photoBrowser;
     id<MWPhoto> _photo;
@@ -22,8 +20,7 @@
     // handling in photo browser
     MWCaptionView *_captionView;
     
-	MWTapDetectingView *_tapView; // for background taps
-	MWTapDetectingImageView *_photoImageView;
+	UIImageView *_photoImageView;
 	UIActivityIndicatorView *_spinner;
 	BOOL zoomBackOut;
 }

@@ -17,33 +17,19 @@
 - (void)hideControlsAfterDelay;
 @end
 
-// Private methods and properties
-@interface MWZoomingScrollView ()
-@property (nonatomic, assign) MWPhotoBrowser *photoBrowser;
-- (void)handleSingleTap:(CGPoint)touchPoint;
-- (void)handleDoubleTap:(CGPoint)touchPoint;
-@end
-
 @implementation MWZoomingScrollView
 
-@synthesize photoBrowser = _photoBrowser, photo = _photo, captionView = _captionView;
+@synthesize photo = _photo, captionView = _captionView;
 
 - (id)initWithPhotoBrowser:(MWPhotoBrowser *)browser {
     if ((self = [super init])) {
         
         // Delegate
-        self.photoBrowser = browser;
-        
-		// Tap view for background
-		_tapView = [[MWTapDetectingView alloc] initWithFrame:self.bounds];
-		_tapView.tapDelegate = self;
-		_tapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_tapView.backgroundColor = [UIColor blackColor];
-		[self addSubview:_tapView];
+        _photoBrowser = browser; // no need to retain superview
 		
 		// Image view
-		_photoImageView = [[MWTapDetectingImageView alloc] initWithFrame:CGRectZero];
-		_photoImageView.tapDelegate = self;
+		_photoImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+		_photoImageView.userInteractionEnabled = NO;
 		_photoImageView.contentMode = UIViewContentModeCenter;
 		_photoImageView.backgroundColor = [UIColor blackColor];
 		[self addSubview:_photoImageView];
@@ -67,7 +53,6 @@
 }
 
 - (void)dealloc {
-	[_tapView release];
 	[_photoImageView release];
 	[_spinner release];
     [_photo release];
@@ -102,7 +87,7 @@
 		self.contentSize = CGSizeMake(0, 0);
 		
 		// Get image from browser as it handles ordering of fetching
-		UIImage *img = [self.photoBrowser imageForPhoto:_photo];
+		UIImage *img = [_photoBrowser imageForPhoto:_photo];
 		if (img) {
 			
 			// Hide spinner
@@ -209,9 +194,6 @@
 
 - (void)layoutSubviews {
 	
-	// Update tap view frame
-	_tapView.frame = self.bounds;
-	
 	// Spinner
 	if (!_spinner.hidden) _spinner.center = CGPointMake(floorf(self.bounds.size.width/2.0),
                                                         floorf(self.bounds.size.height/2.0));
@@ -271,6 +253,22 @@
 
 #pragma mark - Tap Detection
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [touches anyObject];
+	NSUInteger tapCount = touch.tapCount;
+	switch (tapCount) {
+		case 1:
+			[self handleSingleTap:[touch locationInView:self]];
+			break;
+		case 2:
+			[self handleDoubleTap:[touch locationInView:self]];
+			break;
+		default:
+			break;
+	}
+	[[self nextResponder] touchesEnded:touches withEvent:event];
+}
+
 - (void)handleSingleTap:(CGPoint)touchPoint {
 	[_photoBrowser performSelector:@selector(toggleControls) withObject:nil afterDelay:0.2];
 }
@@ -298,20 +296,5 @@
 	
 }
 
-// Image View
-- (void)imageView:(UIImageView *)imageView singleTapDetected:(UITouch *)touch { 
-    [self handleSingleTap:[touch locationInView:imageView]];
-}
-- (void)imageView:(UIImageView *)imageView doubleTapDetected:(UITouch *)touch {
-    [self handleDoubleTap:[touch locationInView:imageView]];
-}
-
-// Background View
-- (void)view:(UIView *)view singleTapDetected:(UITouch *)touch {
-    [self handleSingleTap:[touch locationInView:view]];
-}
-- (void)view:(UIView *)view doubleTapDetected:(UITouch *)touch {
-    [self handleDoubleTap:[touch locationInView:view]];
-}
 
 @end
