@@ -23,6 +23,9 @@
 
 @required
 
+// LOL Hack -- returns nil if it's a normal image; not nil if it's a PDF
+- (NSURL *)PDFURL;
+
 // Return underlying UIImage to be displayed
 // Return nil if the image is not immediately available (loaded into memory, preferably 
 // already decompressed) and needs to be loaded from a source (cache, file, web, etc)

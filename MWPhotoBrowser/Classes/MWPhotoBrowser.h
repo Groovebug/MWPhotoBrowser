@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
-#import "MWPhoto.h"
+#import "MWPhotoPage.h"
 #import "MWPhotoProtocol.h"
 #import "MWCaptionView.h"
 
@@ -20,7 +20,7 @@
 #endif
 
 // Delgate
-@class MWPhotoBrowser, MWZoomingScrollView, MBProgressHUD;
+@class MWPhotoBrowser, MBProgressHUD;
 @protocol MWPhotoBrowserDelegate <NSObject>
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser;
 - (id<MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index;
@@ -84,7 +84,7 @@
 - (void)setInitialPageIndex:(NSUInteger)index;
 
 - (void)didStartViewingPageAtIndex:(NSUInteger)index;
-- (MWZoomingScrollView *)pageDisplayedAtIndex:(NSUInteger)index;
+- (UIView<MWPhotoPage> *)pageDisplayedAtIndex:(NSUInteger)index;
 
 - (void)releaseAllUnderlyingPhotos;
 - (void)setControlsHidden:(BOOL)hidden animated:(BOOL)animated permanent:(BOOL)permanent;
@@ -118,9 +118,9 @@
 // Paging
 - (void)tilePages;
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index;
-- (MWZoomingScrollView *)pageDisplayingPhoto:(id<MWPhoto>)photo;
-- (MWZoomingScrollView *)dequeueRecycledPage;
-- (void)configurePage:(MWZoomingScrollView *)page forIndex:(NSUInteger)index;
+- (UIView<MWPhotoPage> *)pageDisplayingPhoto:(id<MWPhoto>)photo;
+- (UIView<MWPhotoPage> *)dequeueRecycledPageForPhoto:(id<MWPhoto>)photo;
+- (void)configurePage:(UIView<MWPhotoPage> *)page forIndex:(NSUInteger)index;
 
 // Frames
 - (CGRect)frameForPagingScrollView;

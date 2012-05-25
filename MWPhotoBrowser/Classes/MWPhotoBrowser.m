@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MWPhotoBrowser.h"
 #import "MWZoomingScrollView.h"
+#import "MWPDFPage.h"
 #import "MBProgressHUD.h"
 #import "SDImageCache.h"
 
@@ -375,7 +376,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 	_pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
 	
 	// Adjust frames and configuration of each visible page
-	for (MWZoomingScrollView *page in _visiblePages) {
+	for (UIView<MWPhotoPage> * page in _visiblePages) {
         NSUInteger index = PAGE_INDEX(page);
 		page.frame = [self frameForPageAtIndex:index];
         page.captionView.frame = [self frameForCaptionView:page.captionView atIndex:index];
@@ -501,7 +502,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 }
 
 - (void)loadAdjacentPhotosIfNecessary:(id<MWPhoto>)photo {
-    MWZoomingScrollView *page = [self pageDisplayingPhoto:photo];
+    UIView<MWPhotoPage> *page = [self pageDisplayingPhoto:photo];
     if (page) {
         // If page is current page then initiate loading of previous and next pages
         NSUInteger pageIndex = PAGE_INDEX(page);
@@ -529,8 +530,8 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 #pragma mark - MWPhoto Loading Notification
 
 - (void)handleMWPhotoLoadingDidEndNotification:(NSNotification *)notification {
-    id <MWPhoto> photo = [notification object];
-    MWZoomingScrollView *page = [self pageDisplayingPhoto:photo];
+    id<MWPhoto> photo = [notification object];
+    UIView<MWPhotoPage> * page = [self pageDisplayingPhoto:photo];
     if (page) {
         if ([photo underlyingImage]) {
             // Successful load
@@ -560,7 +561,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 	
 	// Recycle no longer needed pages
     NSInteger pageIndex;
-	for (MWZoomingScrollView *page in _visiblePages) {
+	for (UIView<MWPhotoPage> * page in _visiblePages) {
         pageIndex = PAGE_INDEX(page);
 		if (pageIndex < (NSUInteger)iFirstIndex || pageIndex > (NSUInteger)iLastIndex) {
 			[_recycledPages addObject:page];
@@ -578,9 +579,14 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 		if (![self isDisplayingPageForIndex:index]) {
             
             // Add new page
-			MWZoomingScrollView *page = [self dequeueRecycledPage];
+            id<MWPhoto> photo = [self photoAtIndex:index];
+			UIView<MWPhotoPage> *page = [self dequeueRecycledPageForPhoto:photo];
 			if (!page) {
-				page = [[[MWZoomingScrollView alloc] initWithPhotoBrowser:self] autorelease];
+                if (photo.PDFURL) {
+                    page = [[[MWPDFPage alloc] initWithPhotoBrowser:self] autorelease];
+                } else {
+                    page = [[[MWZoomingScrollView alloc] initWithPhotoBrowser:self] autorelease];
+                }
 			}
 			[self configurePage:page forIndex:index];
 			[_visiblePages addObject:page];
@@ -599,14 +605,14 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 }
 
 - (BOOL)isDisplayingPageForIndex:(NSUInteger)index {
-	for (MWZoomingScrollView *page in _visiblePages)
+	for (UIView<MWPhotoPage> *page in _visiblePages)
 		if (PAGE_INDEX(page) == index) return YES;
 	return NO;
 }
 
-- (MWZoomingScrollView *)pageDisplayedAtIndex:(NSUInteger)index {
-	MWZoomingScrollView *thePage = nil;
-	for (MWZoomingScrollView *page in _visiblePages) {
+- (UIView<MWPhotoPage> *)pageDisplayedAtIndex:(NSUInteger)index {
+	UIView<MWPhotoPage> *thePage = nil;
+	for (UIView<MWPhotoPage> *page in _visiblePages) {
 		if (PAGE_INDEX(page) == index) {
 			thePage = page; break;
 		}
@@ -614,9 +620,9 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 	return thePage;
 }
 
-- (MWZoomingScrollView *)pageDisplayingPhoto:(id<MWPhoto>)photo {
-	MWZoomingScrollView *thePage = nil;
-	for (MWZoomingScrollView *page in _visiblePages) {
+- (UIView<MWPhotoPage> *)pageDisplayingPhoto:(id<MWPhoto>)photo {
+	UIView<MWPhotoPage> *thePage = nil;
+	for (UIView<MWPhotoPage> *page in _visiblePages) {
 		if (page.photo == photo) {
 			thePage = page; break;
 		}
@@ -624,14 +630,17 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 	return thePage;
 }
 
-- (void)configurePage:(MWZoomingScrollView *)page forIndex:(NSUInteger)index {
+- (void)configurePage:(UIView<MWPhotoPage> *)page forIndex:(NSUInteger)index {
 	page.frame = [self frameForPageAtIndex:index];
     page.tag = PAGE_INDEX_TAG_OFFSET + index;
     page.photo = [self photoAtIndex:index];
 }
 
-- (MWZoomingScrollView *)dequeueRecycledPage {
-	MWZoomingScrollView *page = [_recycledPages anyObject];
+- (UIView<MWPhotoPage> *)dequeueRecycledPageForPhoto:(id<MWPhoto>)photo {
+	UIView<MWPhotoPage> *page = [[_recycledPages objectsPassingTest:^BOOL(id obj, BOOL *stop) {
+        id<MWPhotoPage> page = obj;
+        return page.supportsPDF == (photo.PDFURL!=nil);
+    }] anyObject];
 	if (page) {
 		[[page retain] autorelease];
 		[_recycledPages removeObject:page];
@@ -832,7 +841,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
     
     // Captions
     NSMutableSet *captionViews = [[[NSMutableSet alloc] initWithCapacity:_visiblePages.count] autorelease];
-    for (MWZoomingScrollView *page in _visiblePages) {
+    for (UIView<MWPhotoPage> *page in _visiblePages) {
         if (page.captionView) [captionViews addObject:page.captionView];
     }
 	

@@ -8,7 +8,6 @@
 
 #import "MWZoomingScrollView.h"
 #import "MWPhotoBrowser.h"
-#import "MWPhoto.h"
 
 // Declare private methods of browser
 @interface MWPhotoBrowser ()
@@ -57,6 +56,14 @@
 	[_spinner release];
     [_photo release];
 	[super dealloc];
+}
+
+- (UIScrollView *)scrollView {
+    return self;
+}
+
+- (BOOL)supportsPDF {
+    return NO;
 }
 
 - (void)setPhoto:(id<MWPhoto>)photo {

@@ -89,6 +89,10 @@ caption = _caption;
 
 #pragma mark MWPhoto Protocol Methods
 
+- (NSURL *)PDFURL {
+    return nil;
+}
+
 - (UIImage *)underlyingImage {
     return _underlyingImage;
 }
