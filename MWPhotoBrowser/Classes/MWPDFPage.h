@@ -10,7 +10,7 @@
 
 #import "MWPhotoPage.h"
 
-@interface MWPDFPage : UIWebView <MWPhotoPage> {
+@interface MWPDFPage : UIWebView <MWPhotoPage, UIWebViewDelegate> {
 	
 	MWPhotoBrowser *_photoBrowser;
     id<MWPhoto> _photo;
@@ -20,6 +20,8 @@
     MWCaptionView *_captionView;
     
 	UIActivityIndicatorView *_spinner;
+    
+    int zoomScaleFixCount;
 }
 
 @end
