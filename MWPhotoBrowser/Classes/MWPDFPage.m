@@ -71,13 +71,11 @@
     if ([keyPath isEqualToString:@"contentSize"]) {
         UIScrollView *sv = self.scrollView;
         float scale = (float)sv.frame.size.height / sv.contentSize.height * sv.zoomScale;
-        NSLog(@"%f -> %f", sv.zoomScale, scale);
         
         if (zoomScaleFixCount > 0) {
             int newCount = zoomScaleFixCount-1;
             zoomScaleFixCount = 0; // prevent recursion by zeroing here
             
-            NSLog(@"SETTING");
             sv.minimumZoomScale = scale;
             sv.maximumZoomScale = 8;
             sv.zoomScale = scale;

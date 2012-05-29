@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MWPhotoProtocol.h"
+#import "MWPhoto.h"
 
-@interface MWPDFPhoto : NSObject <MWPhoto> {
+@interface MWPDFPhoto : MWPhoto <MWPhoto> {
     NSURL *URL;
 }
 
-- (id)initWithURL:(NSURL *)url;
+- (id)initWithPDFURL:(NSURL *)url andPreviewURL:(NSURL *)previewURL;
 
 @end

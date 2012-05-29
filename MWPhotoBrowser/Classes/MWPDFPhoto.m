@@ -10,8 +10,8 @@
 
 @implementation MWPDFPhoto
 
-- (id)initWithURL:(NSURL *)url {
-    if (self = [super init]) {
+- (id)initWithPDFURL:(NSURL *)url andPreviewURL:(NSURL *)previewURL {
+    if (self = [super initWithURL:previewURL]) {
         URL = url;
     }
     return self;
@@ -19,18 +19,6 @@
 
 - (NSURL *)PDFURL {
     return URL;
-}
-
-- (UIImage *)underlyingImage {
-    return nil;
-}
-
-- (void)loadUnderlyingImageAndNotify {
-    [[NSNotificationCenter defaultCenter] postNotificationName:MWPHOTO_LOADING_DID_END_NOTIFICATION object:self];
-}
-
-- (void)unloadUnderlyingImage {
-    
 }
 
 @end

@@ -500,7 +500,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 	}
 	return nil;
 }
-
+//////////////////////////////// This is where the PDF previews SHOULD get loaded
 - (void)loadAdjacentPhotosIfNecessary:(id<MWPhoto>)photo {
     UIView<MWPhotoPage> *page = [self pageDisplayingPhoto:photo];
     if (page) {
