@@ -25,17 +25,19 @@
         _photoBrowser = browser; // no need to retain superview
         
         // WebView
-        self.scalesPageToFit = YES;
-        self.delegate = self;
+        webView = [[UIWebView alloc] init];
+        webView.scalesPageToFit = YES;
+        webView.delegate = self;
+        [self addSubview:webView];
+        self.backgroundColor = webView.backgroundColor;
 		
 		// Spinner
-		_spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		_spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
 		_spinner.hidesWhenStopped = YES;
 		_spinner.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 		[self addSubview:_spinner];
 		
 		// Setup
-		self.backgroundColor = [UIColor blackColor];
 		self.scrollView.showsHorizontalScrollIndicator = NO;
 		self.scrollView.showsVerticalScrollIndicator = NO;
 		self.scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
@@ -47,7 +49,7 @@
 }
 
 - (UIScrollView *)scrollView {
-    return [self.subviews objectAtIndex:0];
+    return [webView.subviews objectAtIndex:0];
 }
 
 - (BOOL)supportsPDF {
@@ -61,7 +63,7 @@
 
 - (void)prepareForReuse {
     self.photo = nil;
-    [self loadHTMLString:@"<html><head><style> * {background-color: black;}</style></head></html>" baseURL:nil];
+    webView.hidden = YES;
     [self bringSubviewToFront:_spinner];
     [_captionView removeFromSuperview];
     self.captionView = nil;
@@ -70,15 +72,17 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"contentSize"]) {
         UIScrollView *sv = self.scrollView;
-        float scale = (float)sv.frame.size.height / sv.contentSize.height * sv.zoomScale;
+        float minScale = (float)sv.frame.size.height / sv.contentSize.height * sv.zoomScale;
+        // if you zoom out too far, the PDFs will disappear (webview bug)
+        minScale = MAX(minScale, 0.34);
         
         if (zoomScaleFixCount > 0) {
             int newCount = zoomScaleFixCount-1;
             zoomScaleFixCount = 0; // prevent recursion by zeroing here
             
-            sv.minimumZoomScale = scale;
+            sv.minimumZoomScale = minScale;
             sv.maximumZoomScale = 8;
-            sv.zoomScale = scale;
+            sv.zoomScale = minScale;
             
             UIEdgeInsets inset;
             inset.left = inset.right = (sv.frame.size.width - sv.contentSize.width)/2;
@@ -92,9 +96,10 @@
 
 #pragma mark - UIWebViewDelegate
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webViewDidFinishLoad:(UIWebView *)wv {
     zoomScaleFixCount = 4;
-    NSLog(@"setup");
+    [_spinner stopAnimating];
+    webView.hidden = NO;
 }
 
 
@@ -102,8 +107,9 @@
 
 - (void)displayImage {
 	if (_photo) {
-        [self loadRequest:[NSURLRequest requestWithURL:_photo.PDFURL]];
-        NSLog(@"load request");
+        [webView loadRequest:[NSURLRequest requestWithURL:_photo.PDFURL]];
+        [_spinner startAnimating];
+        webView.hidden = YES;
 	}
 }
 
@@ -119,8 +125,11 @@
 
 - (void)layoutSubviews {
 	
-	// Spinner
-	if (!_spinner.hidden) _spinner.center = CGPointMake(floorf(self.bounds.size.width/2.0), 100);
+    CGSize s = self.bounds.size;
+    
+	_spinner.center = CGPointMake(s.width/2.0, s.height/2.0);
+    webView.frame = CGRectMake(0, 0, s.width, s.height);
+    
 	// Super
 	[super layoutSubviews];
 }

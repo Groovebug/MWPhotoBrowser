@@ -10,10 +10,12 @@
 
 #import "MWPhotoPage.h"
 
-@interface MWPDFPage : UIWebView <MWPhotoPage, UIWebViewDelegate> {
+@interface MWPDFPage : UIView <MWPhotoPage, UIWebViewDelegate> {
 	
 	MWPhotoBrowser *_photoBrowser;
     id<MWPhoto> _photo;
+    
+    UIWebView *webView;
 	
     // This view references the related caption view for simplified
     // handling in photo browser
