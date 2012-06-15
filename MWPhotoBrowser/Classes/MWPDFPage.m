@@ -84,9 +84,9 @@
             sv.maximumZoomScale = 8;
             sv.zoomScale = minScale;
             
-            UIEdgeInsets inset;
-            inset.left = inset.right = (sv.frame.size.width - sv.contentSize.width)/2;
-            sv.contentInset = inset;
+            UIEdgeInsets insets = UIEdgeInsetsZero;
+            insets.left = insets.right = (sv.frame.size.width - sv.contentSize.width)/2;
+            sv.contentInset = insets;
             
             zoomScaleFixCount = newCount; // ...and unzeroing here
         }
