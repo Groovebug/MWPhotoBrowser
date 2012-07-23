@@ -149,13 +149,7 @@
     // Calculate Min
     CGFloat xScale = boundsSize.width / imageSize.width;    // the scale needed to perfectly fit the image width-wise
     CGFloat yScale = boundsSize.height / imageSize.height;  // the scale needed to perfectly fit the image height-wise
-    CGFloat scale;
-    
-    if (imageSize.height / imageSize.width < 3.0/4.0){
-        scale = xScale;
-    } else {
-        scale = yScale;
-    }
+    CGFloat scale = MIN(xScale, yScale);
     
 	// Calculate Max
 	CGFloat maxScale = 2.0; // Allow double scale
