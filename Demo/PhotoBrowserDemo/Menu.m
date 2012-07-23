@@ -7,6 +7,7 @@
 //
 
 #import "Menu.h"
+#import "MWPhoto.h"
 
 @implementation Menu
 
