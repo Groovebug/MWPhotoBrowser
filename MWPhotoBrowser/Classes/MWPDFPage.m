@@ -44,6 +44,7 @@
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self prepareForReuse];
         [self.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+        [self.scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
@@ -70,8 +71,8 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    UIScrollView *sv = self.scrollView;
     if ([keyPath isEqualToString:@"contentSize"]) {
-        UIScrollView *sv = self.scrollView;
         float minScale = (float)sv.frame.size.height / sv.contentSize.height * sv.zoomScale;
         // if you zoom out too far, the PDFs will disappear (webview bug)
         minScale = MAX(minScale, 0.34);
@@ -89,6 +90,13 @@
             sv.contentInset = insets;
             
             zoomScaleFixCount = newCount; // ...and unzeroing here
+        }
+        
+        sv.contentOffset = CGPointMake(200, 0);
+    } else if ([keyPath isEqualToString:@"contentOffset"]) {
+        if (sv.contentOffset.x == 0 && sv.contentInset.left != 0) {
+            // best get to fixin'
+            sv.contentOffset = CGPointMake(-sv.contentInset.left, 0);
         }
     }
 }
