@@ -45,6 +45,11 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 @synthesize progressHUD = _progressHUD;
 @synthesize previousViewControllerBackButton = _previousViewControllerBackButton;
 
+- (id<MWPhoto>)currentPhoto
+{
+    return [_photos objectAtIndex:_currentPageIndex];
+}
+
 #pragma mark - NSObject
 
 - (id)init {
