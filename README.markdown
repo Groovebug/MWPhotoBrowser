@@ -2,9 +2,9 @@
 
 ## MODIFIED BY GROOVEBUG to support PDFs as well as images
 
-Do you need to display hi-res one-page PDFs in a gallery?  You can use MWPhotoBrowser with the MWPDFPhoto class.
+Do you need to display hi-res one-page PDFs in a gallery?  You can use MWPhotoBrowser with MWPDFPhoto in place of MWPhoto.
 
-The PDFs are displayed with UIWebView so zooming is fully supported. 
+The PDFs are displayed with UIWebView so zooming is fully supported.
 
     NSURL *url = [NSURL URLWithString:@"http://www.eecs.northwestern.edu/docs/CS-curriculum/CS-prereq-NEW.pdf"];
     [[MWPDFPhoto alloc] initWithPDFURL:url andPreviewURL:nil]; 
