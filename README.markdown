@@ -1,5 +1,20 @@
 # MWPhotoBrowser — A simple iOS photo browser
 
+## MODIFIED BY GROOVEBUG to support PDFs as well as images
+
+Do you need to display hi-res one-page PDFs in a gallery?  You can use MWPhotoBrowser with the MWPDFPhoto class.
+
+The PDFs are displayed with UIWebView so zooming is fully supported. 
+
+    NSURL *url = [NSURL URLWithString:@"http://www.eecs.northwestern.edu/docs/CS-curriculum/CS-prereq-NEW.pdf"];
+    [[MWPDFPhoto alloc] initWithPDFURL:url andPreviewURL:nil]; 
+
+Note that this code has only been tested on iPad in landscape orientation.
+
+We claim the same license that Michael uses at the bottom of this document.
+
+## Now back to your regularly scheduled repo description...
+
 MWPhotoBrowser is an implementation of a photo browser similar to the native Photos app in iOS. It can display one or more images by providing either `UIImage` objects, file paths to images on the device, or URLs to images online. The photo browser handles the downloading and caching of photos from the web seamlessly. Photos can be zoomed and panned, and optional (customisable) captions can be displayed. Works on iOS 3.2+. All strings are localisable so they can be used in apps that support multiple languages.
 
 [![Alt][screenshot1_thumb]][screenshot1]    [![Alt][screenshot2_thumb]][screenshot2]    [![Alt][screenshot3_thumb]][screenshot3]    [![Alt][screenshot4_thumb]][screenshot4]
