@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0EA380331573EA4B003F4582 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EA380321573EA4B003F4582 /* ImageIO.framework */; };
 		4C6F96C814AF704100F8389A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C6F96C714AF704100F8389A /* Foundation.framework */; };
 		4C6F96E214AF70BD00F8389A /* MWCaptionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C6F96D614AF70BD00F8389A /* MWCaptionView.h */; };
 		4C6F96E314AF70BD00F8389A /* MWCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6F96D714AF70BD00F8389A /* MWCaptionView.m */; };
@@ -43,6 +44,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0EA380321573EA4B003F4582 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		4C6F96C414AF704100F8389A /* libMWPhotoBrowser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMWPhotoBrowser.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C6F96C714AF704100F8389A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4C6F96CB14AF704100F8389A /* MWPhotoBrowser-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MWPhotoBrowser-Prefix.pch"; sourceTree = SOURCE_ROOT; };
@@ -86,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EA380331573EA4B003F4582 /* ImageIO.framework in Frameworks */,
 				4C6F97C714AF74E200F8389A /* MessageUI.framework in Frameworks */,
 				4C6F96C814AF704100F8389A /* Foundation.framework in Frameworks */,
 			);
@@ -115,6 +118,7 @@
 		4C6F96C614AF704100F8389A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0EA380321573EA4B003F4582 /* ImageIO.framework */,
 				4C6F97C614AF74E200F8389A /* MessageUI.framework */,
 				4C6F96C714AF704100F8389A /* Foundation.framework */,
 			);
@@ -144,13 +148,13 @@
 		4C6F96F014AF70E800F8389A /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				4C6F96F214AF70FA00F8389A /* MBProgressHUD (2afc4dd) */,
-				4C6F96F114AF70F500F8389A /* SDWebImage (8318b29) */,
+				4C6F96F214AF70FA00F8389A /* MBProgressHUD (3d5c3cc) */,
+				4C6F96F114AF70F500F8389A /* SDWebImage (b357e82) */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
 		};
-		4C6F96F114AF70F500F8389A /* SDWebImage (8318b29) */ = {
+		4C6F96F114AF70F500F8389A /* SDWebImage (b357e82) */ = {
 			isa = PBXGroup;
 			children = (
 				4C6F96F814AF711300F8389A /* SDImageCache.h */,
@@ -172,16 +176,16 @@
 				4C6F970814AF711300F8389A /* UIImageView+WebCache.h */,
 				4C6F970914AF711300F8389A /* UIImageView+WebCache.m */,
 			);
-			name = "SDWebImage (8318b29)";
+			name = "SDWebImage (b357e82)";
 			sourceTree = "<group>";
 		};
-		4C6F96F214AF70FA00F8389A /* MBProgressHUD (2afc4dd) */ = {
+		4C6F96F214AF70FA00F8389A /* MBProgressHUD (3d5c3cc) */ = {
 			isa = PBXGroup;
 			children = (
 				4C6F96F414AF710800F8389A /* MBProgressHUD.h */,
 				4C6F96F514AF710800F8389A /* MBProgressHUD.m */,
 			);
-			name = "MBProgressHUD (2afc4dd)";
+			name = "MBProgressHUD (3d5c3cc)";
 			sourceTree = "<group>";
 		};
 		4C6F97E114AF7CCE00F8389A /* Supporting Files */ = {
