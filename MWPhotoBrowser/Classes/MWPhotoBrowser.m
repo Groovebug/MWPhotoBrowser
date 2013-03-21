@@ -815,6 +815,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
     [self cancelControlHiding];
 	
 	// Status bar and nav bar positioning
+    /*  THIS CAUSES AN ISSUE WHEN THE NAVIGATION CONTROLLER HAS A SHADOW
     if (self.wantsFullScreenLayout) {
         
         // Get status bar height if visible
@@ -838,7 +839,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
         navBarFrame.origin.y = statusBarHeight;
         self.navigationController.navigationBar.frame = navBarFrame;
         
-    }
+    } */
     
     // Captions
     NSMutableSet *captionViews = [[[NSMutableSet alloc] initWithCapacity:_visiblePages.count] autorelease];
