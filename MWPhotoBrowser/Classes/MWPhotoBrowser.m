@@ -344,6 +344,11 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
     
 }
 
+- (void)viewDidLayoutSubviews
+{
+	_pagingScrollView.frame = [self frameForPagingScrollView];
+}
+
 #pragma mark - Rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -433,7 +438,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
     } else {
         id <MWPhoto> photo = [self photoAtIndex:index];
         if ([photo respondsToSelector:@selector(caption)]) {
-            if ([photo caption]) captionView = [[[MWCaptionView alloc] initWithPhoto:photo] autorelease];
+            if ([[photo caption] length]) captionView = [[[MWCaptionView alloc] initWithPhoto:photo] autorelease];
         }
     }
     captionView.alpha = [self areControlsHidden] ? 0 : 1; // Initial alpha
@@ -661,7 +666,10 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 - (CGSize)contentSizeForPagingScrollView {
     // We have to use the paging scroll view's bounds to calculate the contentSize, for the same reason outlined above.
     CGRect bounds = _pagingScrollView.bounds;
-    return CGSizeMake(bounds.size.width * [self numberOfPhotos], bounds.size.height);
+    if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
+        return CGSizeMake(bounds.size.width * [self numberOfPhotos], bounds.size.height);
+    }
+    return CGSizeMake(bounds.size.width * [self numberOfPhotos], 0);
 }
 
 - (CGPoint)contentOffsetForPageAtIndex:(NSUInteger)index {
@@ -682,6 +690,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
     captionView.frame = CGRectMake(0, 0, pageFrame.size.width, 44); // set initial frame
     CGSize captionSize = [captionView sizeThatFits:CGSizeMake(pageFrame.size.width, 0)];
     CGRect captionFrame = CGRectMake(pageFrame.origin.x, pageFrame.size.height - captionSize.height - (_toolbar.superview?_toolbar.frame.size.height:0), pageFrame.size.width, captionSize.height);
+    captionFrame.origin.y -= 100;
     return captionFrame;
 }
 
